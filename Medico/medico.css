@@ -115,3 +115,7 @@ button{
 button:hover{
     background-color: rgb(151, 151, 146);
 }
+
+.parFiltro{
+    text-align: left;
+}

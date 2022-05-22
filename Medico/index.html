@@ -104,11 +104,22 @@
       <fieldset>
         <legend>Datos del paciente: </legend>
       <dl id="infoPaciente"></dl>
+      <p class="parFiltro">Filtrar muestras por variable</p>
+      <dl><select id="filtroVar">
+        <option disabled selected>Seleccione una variable de filtro</option>
+        <option>PESO (Kg)</option>
+        <option>METROS ANDADOS</option>
+        <option>METROS CORRIDOS</option>
+        <option>MINUTOS DE GIMNASIA REALIZADOS</option>
+        <option>TENSIÓN SANGUÍNEA MEDIA (MMGH)</option>
+        <option>SATURACIÓN DE OXÍGENO MEDIA</option>
+        <option>Mostrar todas las muestras</option>
+      </select></dl>
       <dl id="infoMuestras"></dl>
     </fieldset>
 
-      <button onclick="cambiarSeccion('menu-principal')">Volver a Menú</button>
-      <button onclick="salir()">Salir</button>
+      <button onclick="volverDeDatosPaciente()">Volver a Menú</button>
+      <button onclick="salirDeDatosPaciente()">Salir</button>
     </div>
 
 

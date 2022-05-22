@@ -17,18 +17,18 @@ var pacienteElegir = document.getElementById("someone");
 pacienteElegir.addEventListener("click", function () {
     // Cuando hace click en esta opción
     var electionPaciente = document.getElementById("elegirPacientes");
-    electionPaciente.innerHTML = "";  
+    electionPaciente.innerHTML = "";
     // Obtenemos la referencia a donde vamos a imprimir toda la lista de pacientes y lo vacíamos primero.
     for (var i in pacientesDelMedico) {
         // Pacientes del médico es una variable global donde guardamos la lista de pacientes.
 
         // Si el nombre es igual al propio pacientes que no se imprima.
         if (pacientesDelMedico[i].nombre != pac.nombre) {
-            electionPaciente.innerHTML += "<li><input type='radio' id="+pacientesDelMedico[i].id+" name='compartirQuien' value=" + pacientesDelMedico[i].nombre + ">" + pacientesDelMedico[i].nombre + "</li>"
+            electionPaciente.innerHTML += "<li><input type='radio' id=" + pacientesDelMedico[i].id + " name='compartirQuien' value=" + pacientesDelMedico[i].nombre + ">" + pacientesDelMedico[i].nombre + "</li>"
         }
 
         // Si el médico del paciente no tiene a ningún paciente más, pues que se imprima por pantalla la cadena de texto siguiente.
-        if(electionPaciente.innerHTML == ''){
+        if (electionPaciente.innerHTML == '') {
             electionPaciente.innerHTML += "Tú médico solo te tiene a ti😊";
         }
     }
@@ -73,7 +73,7 @@ function compartirMuestra() {
         // El médico del paciente que comparte la muestra
         // El id de la persona a la que quiere compartir
         // El id de la muestra que quiere compartir.
-        conexion.send(JSON.stringify({ origen: "paciente2",nombrePaciente: pac.nombre,idPaciente: pac.id, medico: pac.medico,idPersonaCompartir: electionID, personaCompartir: election, idMuestraCompartir: idMuestraCompartir }));
+        conexion.send(JSON.stringify({ origen: "paciente2", nombrePaciente: pac.nombre, idPaciente: pac.id, medico: pac.medico, idPersonaCompartir: electionID, personaCompartir: election, idMuestraCompartir: idMuestraCompartir }));
     }
 }
 
@@ -231,7 +231,7 @@ function entrar() {
                 // Operación 1 del paciente para obtener la lista de pacientes del médico
                 // Médico del paciente para buscar los pacientes que tengan los mismos médicos.
                 // El id del paciente para identificar a esta conexión.
-                conexion.send(JSON.stringify({ origen: "paciente1" ,medicoPacienteConectado: pac.medico, idPac: idPac}));
+                conexion.send(JSON.stringify({ origen: "paciente1", medicoPacienteConectado: pac.medico, idPac: idPac }));
 
                 welc.innerHTML += "Bienvenido/a " + paciente.nombre + "!!!";
                 //Empiezan a ejecutarse.
@@ -247,19 +247,19 @@ function entrar() {
                 // Tengo que identificar que tipo de mensaje es porque le van a llegar más de dos mensajes también aquí.
                 var msg = JSON.parse(event.data);
                 // Cuando entra por primera vez para que le devuelvan los pacientes.
-                if(msg.contenido == "listaPaciente"){
+                if (msg.contenido == "listaPaciente") {
                     pacientesDelMedico = msg.listaP;
                 }
                 // Cuando comparte el paciente a los otros pacientes.
-                else if(msg.contenido == "mensaje"){
+                else if (msg.contenido == "mensaje") {
                     alert(msg.mensaje);
                 }
 
-                else if(msg.contenido == "mensajeError"){
+                else if (msg.contenido == "mensajeError") {
                     alert(msg.mensaje);
                 }
 
-                else if(msg.contenido == "mensajeCorrecto"){
+                else if (msg.contenido == "mensajeCorrecto") {
                     alert(msg.mensaje);
                 }
 

@@ -205,6 +205,6 @@ wsServer.on("request", function (request) { // este callback se ejecuta cuando l
 				clientes.splice(l,1);
 			}
 		}
-		// console.log("Cliente desconectado. Ahora hay", clientes.length);
+		console.log("Cliente desconectado. Ahora hay", clientes.length);
 	});
 });

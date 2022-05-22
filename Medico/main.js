@@ -80,13 +80,9 @@ function logear() {
                 if (estado == 200) {
                     //Obtenemos el nombre del médico.
                     nombreMedico = res.nombre;
-
-                    // //Enviamos mensaje al servidor.
-                    // conexion.send(JSON.stringify({medicoConectado: idMedico}));
-
                     saludo.innerHTML += "Bienvenido/a " + nombreMedico//datosLogin.login;
                     // Actualizamos los datos definidos en la función de refrescar.
-                    
+
                     // Parte de websockets
                     conexion = new WebSocket('ws://localhost:4444', "pacientes");
                     // Este callback se lanza cuando el cliente se conecta.
@@ -94,15 +90,15 @@ function logear() {
                         // console.log("Cliente conectado!!!");
                         refrescarPagina();
                         // al conectarse el médico que le envie al servidor su id y quien es, para poder identificarlo.
-                        conexion.send(JSON.stringify({origen: "medico", idMedico: idMedico}));
+                        conexion.send(JSON.stringify({ origen: "medico", idMedico: idMedico }));
                     });
 
                     // Aquí reciben todos los mensajes del servidor la parte de los médicos.
                     conexion.addEventListener('message', function (event) {
                         // console.log("Mensaje del servidor:", event.data);
-                        // El médico solo recibe un mensaje que es el que el paciente le comparte.
+                        // El médico solo recibe un tipo de mensaje que es el que el paciente le comparte.
                         var msg = JSON.parse(event.data);
-                        if(msg.contenido == "mensaje"){
+                        if (msg.contenido == "mensaje") {
                             alert(msg.mensaje);
                         }
                     });
@@ -139,7 +135,7 @@ function refrescarPagina() {
     // Función 5 del servidor.
     rest.get('/api/medico/' + idMedico + '/pacientes', (estado, res) => {
         if (estado == 200) {
-            // En este caso, la respuesta es una lista de pacientes.
+            // En este caso, la respuesta es una lista de pacientes del médico con ese id .
             // Lo guardamos en una variable externa.
             pacientesDelMedico = res;
 
@@ -176,7 +172,7 @@ function consultarExpediente(indice) {
     rest.get('/api/paciente/' + idPaciente, (estado, res) => {
         if (estado == 200) {
             // En este caso, la respuesta es un objeto paciente con su id, nombre, medico y observaciones.
-            parrafoDatosPaciente.innerHTML += "<dt>ID: " + res.id + "</dt><dd>NOMBRE: " + res.nombre + "</dd><dd>OBSERVACIONES: " + res.observaciones + "</dd><dd><button onclick='cambiarDatos(" + res.id + ")'>Modificar datos</button></dd>" + "<br/><br/>"
+            parrafoDatosPaciente.innerHTML += "<dt>ID: " + res.id + "</dt><dd>NOMBRE: " + res.nombre + "</dd><dd>OBSERVACIONES: " + res.observaciones + "</dd><dd><button onclick='cambiarDatos(" + res.id + ")'>Modificar datos del paciente</button></dd>" + "<br/><br/>"
             // Mostramos las muestras que tiene este paciente.
             mostrarMuestras();
         }
@@ -192,13 +188,15 @@ function consultarExpediente(indice) {
 
 
 
-
+var informacionMuestras = ""
 // Para mostrar las muestras que tiene asociado el paciente.
 function mostrarMuestras() {
 
     var parrafoDatosMuestras = document.getElementById('infoMuestras');
     parrafoDatosMuestras.innerHTML = "";
 
+    // Creamos una variable global para guardar la infomación de las muestras para el filtrado de los valores
+    informacionMuestras = "";
     // Función 8 del servidor.
     rest.get("/api/paciente/" + idPaciente + "/muestras", (estado, res) => {
         if (estado == 200) {
@@ -213,6 +211,7 @@ function mostrarMuestras() {
                         var nombreVariable = miVar[j].nombre;
                     }
                 }
+                informacionMuestras = res;
                 parrafoDatosMuestras.innerHTML += "<dt>Variable: " + idVar + "</dt><dd>Concepto de la variable: " + nombreVariable + "</dd><dd>Valor: " + res[i].valor + "</dd><dd>Fecha: " + res[i].fecha + "</dd></br>";
             }
         } else {
@@ -223,6 +222,86 @@ function mostrarMuestras() {
 
 
 
+
+
+
+
+
+
+
+
+
+// Añadimos esta parte para filtrar las muestras por las variables.
+var filtMuestra = document.getElementById("filtroVar");
+filtMuestra.addEventListener('change', () => {
+    var conjVariables = document.getElementById("infoMuestras");
+    conjVariables.innerHTML = '';
+    var filtValor = filtMuestra.value;
+    switch (filtValor) {
+
+        case "PESO (Kg)":
+            mostrarFiltrado(1)
+            break
+        case "METROS ANDADOS":
+            mostrarFiltrado(2)
+            break
+        case "METROS CORRIDOS":
+            mostrarFiltrado(3)
+            break
+        case "MINUTOS DE GIMNASIA REALIZADOS":
+            mostrarFiltrado(4)
+            break
+        case "TENSIÓN SANGUÍNEA MEDIA (MMGH)":
+            mostrarFiltrado(5)
+            break
+        case "SATURACIÓN DE OXÍGENO MEDIA":
+            mostrarFiltrado(6)
+            break
+        case "Mostrar todas las muestras":
+            mostrarMuestras();
+            break
+    }
+})
+
+function mostrarFiltrado(id) {
+    var varFiltrado = document.getElementById("infoMuestras");
+    varFiltrado.innerHTML = "";
+    for (var i in informacionMuestras) {
+        if (informacionMuestras[i].variable == id) {
+            varFiltrado.innerHTML += "<dt>Variable: " + informacionMuestras[i].variable + "</dt><dd>Concepto de la variable: " + mostrarConcepto(informacionMuestras[i].variable) + "</dd><dd>Valor: " + informacionMuestras[i].valor + "</dd><dd>Fecha: " + informacionMuestras[i].fecha + "</dd></br>"
+            console.log(informacionMuestras[i]);
+        }
+    }
+    if(varFiltrado.innerHTML == ''){
+        alert("Este paciente no tiene ninguna muestra asociada con esta variable");
+    }
+}
+
+function mostrarConcepto(id){
+    for(var i in miVar){
+        if(miVar[i].id == id){
+            return(miVar[i].nombre)
+        }
+    }
+}
+
+function volverDeDatosPaciente(){
+    cambiarSeccion("menu-principal");
+    varFiltrado = document.getElementById("filtroVar");
+    varFiltrado.value = varFiltrado[0].value;
+}
+
+// Cuando salimos de la página de datos del paciente, vamos a restablecer los valores predeterminados del select que hemos realizado
+function salirDeDatosPaciente(){
+    cambiarSeccion("login");
+    varFiltrado = document.getElementById("filtroVar");
+    varFiltrado.value = varFiltrado[0].value;
+    var userName = document.getElementById("usuario");
+    var userPassword = document.getElementById("password");
+    conexion.close();
+    userName.value = "";
+    userPassword.value = "";
+}
 
 
 
@@ -258,7 +337,7 @@ function cambiarDatos(indice) {
                 if (idPaciente == respuesta[i].id) {
                     nombrePaciente.value = respuesta[i].nombre;
                     fechaPaciente.value = respuesta[i].fecha_nacimiento;
-                    // El género es diferentes, porque tiene dos opciones, entonces, depende de lo que tenga escrito el médico, que me cree uno u otro.
+                    // El género es diferentes, porque tiene dos opciones, entonces, depende de lo que tenga escrito el médico, que me cree uno u otro. (para facilitar el uso al médico)
                     if (respuesta[i].genero == "Masculino") {
                         generoPaciente.innerHTML += "<option selected>Masculino</option><option>Femenino</option>";
                     } else {
@@ -352,7 +431,7 @@ function addPacienteDentro() {
             accesCodeNew.value = "";
             observationsNew.value = "";
         } else {
-            //No hace comprobar el médico, pero deberíamos comprobar si los campos están vacíos o no.
+            //No hace falta comprobar el médico, pero deberíamos comprobar si los campos están vacíos o no.
             alert(respuesta);
         }
     })
@@ -398,7 +477,3 @@ function salir() {
     userName.value = "";
     userPassword.value = "";
 }
-
-
-
-

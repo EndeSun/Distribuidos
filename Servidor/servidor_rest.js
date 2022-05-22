@@ -51,7 +51,7 @@ app.post("/api/medico/login", function (req, res) {
     for (var i = 0; i < ListaMedico.length; i++) {
         //Si el login está y la contraseña tambiéne está entra en la condición.
         if (medico.login == ListaMedico[i].login && medico.password == ListaMedico[i].password) {
-             return res.status(201).json(ListaMedico[i].id);
+            return res.status(201).json(ListaMedico[i].id);
         }
     }
 
@@ -137,13 +137,7 @@ app.get("/api/medico/:id/pacientes", (req, res) => {
             pacienteMedico.push(pacientes[i])
         }
     }
-
-    // if (check == true) {
-    //     res.status(200).json(pacienteMedico)
-    // } else {
-    //     res.status(404).json("Este médico no tiene asignado ningún pacientes");
-    // }
-
+    // Si el objeto no está vacío, se le envia la lista de pacientes
     if (pacienteMedico.length != 0) {
         return res.status(200).json(pacienteMedico)
     } else {
@@ -161,6 +155,7 @@ app.post("/api/medico/:id/pacientes", (req, res) => {
     // Recorremos la lista de Médico para ver si existe este médico con este id.
     for (var i = 0; i < ListaMedico.length; i++) {
         if (ListaMedico[i].id == id) {
+            // Si existe el médico creamos un objeto paciente con las siguientes características
             var paciente = {
                 // Si existe creamos un paciente
                 id: contadorPaciente,
@@ -173,8 +168,8 @@ app.post("/api/medico/:id/pacientes", (req, res) => {
             }
 
 
-            for(var j = 0; j < pacientes.length; j++){
-                if(pacientes[j].codigo_acceso == paciente.codigo_acceso){
+            for (var j = 0; j < pacientes.length; j++) {
+                if (pacientes[j].codigo_acceso == paciente.codigo_acceso) {
                     return res.status(404).json("Ya hay un paciente con dicho código de acceso");
                 }
             }
@@ -189,6 +184,7 @@ app.post("/api/medico/:id/pacientes", (req, res) => {
             }
         }
     }
+
     return res.status(404).json("No se ha encontrado un médico con dicho id");
 })
 
@@ -206,8 +202,9 @@ app.put("/api/paciente/:id", (req, res) => {
     var codigo_acceso = req.body.codigo_acceso;
     var observaciones = req.body.observaciones;
 
-    for(var j = 0; j < pacientes.length; j++){
-        if(pacientes[j].codigo_acceso == codigo_acceso){
+    // Para comprobar si hay algún paciente con el código de acceso
+    for (var j = 0; j < pacientes.length; j++) {
+        if (pacientes[j].codigo_acceso == codigo_acceso) {
             return res.status(404).json("Ya hay un paciente con dicho código de acceso");
         }
     }
@@ -216,6 +213,8 @@ app.put("/api/paciente/:id", (req, res) => {
     if (nombre == '' || fecha_nacimiento == '' || genero == '' || codigo_acceso == '') {
         return res.status(404).json("Por favor, rellene todos los campos obligatorios")
     }
+
+    // Si todo funciona bien -->
     else {
         for (var i = 0; i < pacientes.length; i++) {
             // Los campos no pueden estar vacíos.
@@ -231,7 +230,7 @@ app.put("/api/paciente/:id", (req, res) => {
                 return res.status(200).json(pacientes[i]);
             }
         }
-        
+
     }
     return res.status(404).json("No se ha encontrado ningún paciente con dicho id")
 })
@@ -282,6 +281,28 @@ app.get("/api/paciente/:id/muestras", (req, res) => {
         return res.status(404).json("Dicho paciente no tiene muestras asociadas");
     }
 });
+
+
+// Preparando para el examen:
+// Método get
+// app.get("/api/", (req, res) => {
+// 
+// })
+
+// Método post
+// app.post("/api/", function(req,res){
+
+// })
+
+// Método delete
+// app.delete("/api/", (req, res) => {
+
+// })
+
+// Método put
+// app.put("/api/", (req, res) => {
+
+// })
 
 // La aplicación escucha en el puerto 8080
 app.listen(8080);

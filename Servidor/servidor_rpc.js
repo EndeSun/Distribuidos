@@ -154,6 +154,8 @@ app.register(datosMedico);
 app.register(listadoMuestras);
 app.register(agregarMuestra);
 app.register(eliminarMuestra);
+
+// Preparando para el examen
 // app.register();
 // app.register();
 // app.register();
