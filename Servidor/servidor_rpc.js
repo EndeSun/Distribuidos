@@ -79,7 +79,7 @@ function listadoMuestras(idPaciente) {
 // Función 5
 // Devuelve el Id de la nueva muestra
 function agregarMuestra(idPaciente, idVariable, fecha, valor) {
-    console.log("Nueva muestra", idPaciente, idVariable, fecha, valor);
+    // console.log("Nueva muestra", idPaciente, idVariable, fecha, valor);
     if (!idPaciente || !idVariable || !fecha || !valor || idVariable > variables.length) {
         return -1;
     } else {
@@ -106,11 +106,22 @@ function eliminarMuestra(idValor) {
     for (var i = 0; muestras.length; i++) {
         if (muestras[i].id == idValor) {
             muestras.splice(i, 1); //Borra en la posición encontrada, 1 objeto.
-            console.log("Muestra borrada con identificador", idValor);
+            // console.log("Muestra borrada con identificador", idValor);
             return true;
         }
     }
     return false;
+}
+
+// Función implementada en el examen --> aumentar los valores de todas las muestras en 1.
+function incrementar(idPaciente){
+    for(var i = 0; i < muestras.length; i++){
+        if(muestras[i].paciente == idPaciente){
+            muestras[i].valor += 1;
+        }
+    }
+
+    return muestras;
 }
 
 // Se definen las funciones del servidor, funciones normales de javascript
@@ -154,6 +165,7 @@ app.register(datosMedico);
 app.register(listadoMuestras);
 app.register(agregarMuestra);
 app.register(eliminarMuestra);
+app.register(incrementar);
 
 // Preparando para el examen
 // app.register();

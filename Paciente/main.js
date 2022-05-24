@@ -136,6 +136,7 @@ var datosMedico = app.procedure("datosMedico");
 var listadoMuestras = app.procedure("listadoMuestras");
 var agregarMuestra = app.procedure("agregarMuestra");
 var eliminarMuestra = app.procedure("eliminarMuestra");
+var incrementar = app.procedure("incrementar")
 
 
 
@@ -270,6 +271,35 @@ function entrar() {
 }
 
 
+// Función implementada del examen, que es aumentar todos los valores de las muestras en 1.
+function incrementarButton() {
+    incrementar(pac.id, function (muestras) {
+        refrescarPagina();
+    })
+}
+
+// Cunadon hacemos un cambio, y queremos refrescar la página lo hacemos con esta función y no la de entrar, sino se va conectando cada vez que llamamos a la función de entrar.
+function refrescarPagina() {
+    // Ya se obtiene información de la interfaz del menú principal del paciente.
+    var welc = document.getElementById("welcomeMessage");
+    // Filtrado es el select donde se va a filtrar las variables según el tipo de muestra
+    var filtrado = document.getElementById("filtradoVariables");
+    // Por defecto el filtrado es el primer valor (el deshabilitado).
+    filtrado.value = filtrado[0].value;
+    welc.innerHTML = "";
+    cambiarSeccion("menu-principal-paciente");
+
+
+    // Enviamos mensaje al servidor websocket para obtener la lista de pacientes
+    // Le enviamos:
+    // Operación 1 del paciente para obtener la lista de pacientes del médico
+    // Médico del paciente para buscar los pacientes que tengan los mismos médicos.
+    // El id del paciente para identificar a esta conexión.
+    welc.innerHTML += "Bienvenido/a " + pac.nombre + "!!!";
+    //Empiezan a ejecutarse.
+    adivinarMedico(pac.medico);
+    mostrarMuestras(pac.id);
+}
 
 
 
@@ -343,7 +373,7 @@ function eliminar(id) {
     eliminarMuestra(id, function (booleano) {
         if (booleano == true) {
             // Si es correcto, solo tenemos que recargar la página de nuevo y ya estaría.
-            entrar();
+            refrescarPagina();
         }//No haría falta un control de flujo aquí, porque las muestras ya están comprobadas que existen.
     })
 }

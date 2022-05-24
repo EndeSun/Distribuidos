@@ -269,7 +269,7 @@ function mostrarFiltrado(id) {
     for (var i in informacionMuestras) {
         if (informacionMuestras[i].variable == id) {
             varFiltrado.innerHTML += "<dt>Variable: " + informacionMuestras[i].variable + "</dt><dd>Concepto de la variable: " + mostrarConcepto(informacionMuestras[i].variable) + "</dd><dd>Valor: " + informacionMuestras[i].valor + "</dd><dd>Fecha: " + informacionMuestras[i].fecha + "</dd></br>"
-            console.log(informacionMuestras[i]);
+            // console.log(informacionMuestras[i]);
         }
     }
     if(varFiltrado.innerHTML == ''){
