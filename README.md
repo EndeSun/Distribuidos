@@ -29,3 +29,5 @@ Hay que instalar previamente los módulos:
 express --> npm install express
 websockets -->npm install websockets
 cors --> npm install cors
+
+El paquete de nodemodules solo tiene que estar en la parte del servidor, es un paquete pesado.
