@@ -1,19 +1,4 @@
 # Distribuidos
-*Cursiva*
-**negrita**
-*Ejercicios de distribuidos*
-Lista numerada
-1. Elemento
-2. Elemento
-3. Elemento
-
-Lista sin numerar
-* Elemento
-* Elemento
-* Elemento
-
-\ Para escapar carácteres
-
 En el servidor se alojan todos las tecnologías:
 REST
 RPC
@@ -29,5 +14,3 @@ Hay que instalar previamente los módulos:
 express --> npm install express
 websockets -->npm install websockets
 cors --> npm install cors
-
-El paquete de nodemodules solo tiene que estar en la parte del servidor, es un paquete pesado.
